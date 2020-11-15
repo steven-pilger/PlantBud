@@ -23,12 +23,20 @@
       - git
       - build-essential
       - picocom
+      - python3-distutils
       state: latest
     become: yes
 
+  - name: Install pip
+    shell: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py && rm get-pip.py
+
   - name: Install Ampy
-    pip:
-      name: adafruit-ampy
+    shell: python -m pip install adafruit-ampy
+
+  - name: Add the local python bin dir to system-wide $PATH.
+    copy:
+      dest: /etc/profile.d/python-module-path.sh
+      content: 'PATH=$PATH:~/.local/bin'
     become: yes
 
   - name: Clone the PlantBud repo
