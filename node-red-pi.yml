@@ -1,0 +1,54 @@
+- name: Setup NodeRED RPi
+  hosts: noderedpi
+  gather_facts: no
+  remote_user: steven
+  vars_files:
+    - host_vars/node-red-pi.yml
+
+  tasks:
+  - name: Run the equivalent of "apt-get update"
+    apt:
+      update_cache: true
+      cache_valid_time: 3600
+    become: yes
+
+  - name: Update all packages to the latest version
+    apt:
+      upgrade: dist
+    become: yes
+
+  - name: Install required packages
+    yum:
+      name: 
+      - git
+      - build-essential
+      - picocom
+      state: latest
+    become: yes
+
+  - name: Install Ampy
+    pip:
+      name: adafruit-ampy
+    become: yes
+
+  - name: Clone the PlantBud repo
+    git:
+      repo: 'https://github.com/steven-pilger/PlantBud'
+      dest: /home/steven/PlantBud
+
+  - name: Install NodeRED
+    shell: bash <(curl -sL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered) --confirm-root --confirm-install --confirm-pi
+    args:
+      executable: /bin/bash
+    become: yes
+
+  - name: Enable and Restart NodeRED
+    service:
+      name: nodered.service
+      state: restarted
+      enabled: yes
+      masked: no
+    become: yes
+
+  - name: Copy NodeRED configuration from repo to dir
+    command: echo 'not yet configured'

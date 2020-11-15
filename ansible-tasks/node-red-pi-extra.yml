@@ -1,0 +1,17 @@
+- hosts: noderedpi
+  become: yes
+  gather_facts: no
+  remote_user: steven
+  vars_files:
+    - host_vars/node-red-pi.yml
+
+  tasks:
+  - name: Update git repo
+    git: force=yes dest=~/PlantBud repo=https://github.com/steven-pilger/PlantBud
+    tags: update
+
+  - name: Flash Probe
+    command: echo 'not configured yet'
+    tags: flash
+
+

@@ -1,0 +1,16 @@
+- hosts: oraclevm
+  gather_facts: no
+  remote_user: opc
+  vars_files:
+    - ../host_vars/oracle-vm.yml
+
+  tasks:
+  - name: Update git repo
+    git: force=yes dest=~/PlantBud repo=https://github.com/steven-pilger/PlantBud
+    tags: restart
+
+  - name: Compose Up Project
+    command: chdir=/home/opc/PlantBud argv='docker-compose up -d'
+    tags: restart
+
+

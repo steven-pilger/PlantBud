@@ -1,0 +1,3 @@
+[submodule "iot-probes/esptool"]
+	path = iot-probes/esptool
+	url = https://github.com/espressif/esptool

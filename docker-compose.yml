@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  # openwhisk:
+  #   image: openwhisk/standalone:1.0.0
+  #   command: "--config-file custom.conf"
+  #   ports:
+  #       - 3232:3232
+  #       - 3233:3233
+  #   volumes:
+  #     - ./openwhisk/custom.conf:/custom.conf
+  #     - /var/run/docker.sock:/var/run/docker.sock
+

@@ -1,0 +1,48 @@
+- name: Setup Oracle VM
+  hosts: oraclevm
+  gather_facts: no
+  remote_user: opc
+  vars_files:
+    - host_vars/oracle-vm.yml
+
+  tasks:
+  - name: Install required packages
+    yum:
+      name: 
+      - git
+      - docker-engine
+      state: latest
+
+  - name: Install docker-compose
+    shell: |
+      sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      sudo chmod +x /usr/local/bin/docker-compose
+      exit 0
+    args:
+      warn: no
+
+  - name: Ensure group docker exists
+    group:
+      name: docker
+      state: present
+
+  - name: Add user to docker group
+    user:
+      name: opc
+      shell: /bin/bash
+      groups: docker
+      append: yes
+
+  # - name: Set docker up to start automatically
+  #   service:
+  #     name: docker.service
+  #     state: restarted
+  #     enabled: yes
+  #     masked: no
+  #     no_block: yes
+
+  - name: Clone the PlantBud repo
+    git:
+      repo: 'https://github.com/steven-pilger/PlantBud'
+      dest: ~/PlantBud
+
