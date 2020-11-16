@@ -189,3 +189,5 @@ sketch
 
 **/*.pub
 **/*.key
+**/*.secret
+**/*.env*

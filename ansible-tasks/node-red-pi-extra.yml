@@ -11,7 +11,9 @@
     tags: update
 
   - name: Flash Probe
-    command: echo 'not configured yet'
+    command: make upload reset
+    args:
+      chdir: ~/PlantBud/iot-probes
     tags: flash
 
 
