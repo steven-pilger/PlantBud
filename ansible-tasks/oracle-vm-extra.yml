@@ -3,14 +3,46 @@
   remote_user: opc
   vars_files:
     - ../host_vars/oracle-vm.yml
+  vars:
+    dest_path: /home/opc/PlantBud
+    secret_files:
+      - .env
+      - frontend/traefik/traefik.env
+    acme_path: frontend/letsencrypt/acme.json
 
   tasks:
   - name: Update git repo
-    git: force=yes dest=~/PlantBud repo=https://github.com/steven-pilger/PlantBud
+    git: force=yes dest="{{dest_path}}" repo=https://github.com/steven-pilger/PlantBud
+    tags: restart
+
+  - name: Prepare ACME cert
+    file:
+      path: "{{dest_path}}/{{acme_path}}"
+      state: touch
+      mode: 0600
     tags: restart
 
   - name: Compose Up Project
-    command: chdir=/home/opc/PlantBud argv='docker-compose up -d'
+    command: docker-compose up -d
+    args:
+      chdir: "{{dest_path}}"
     tags: restart
 
+  - name: Make sure secret destination dirs exist
+    file:
+      path: "{{ dest_path }}/{{item | dirname }}"
+      state: directory
+      recurse: yes
+    with_items:
+      - "{{secret_files}}"
+      - "{{acme_path}}"
+    tags: secrets
 
+  - name: Copy secret files to remote
+    copy:
+      src: "{{inventory_dir}}/{{item}}"
+      dest: "{{dest_path}}/{{item}}"
+      mode: preserve
+    with_items:
+      - "{{secret_files}}"
+    tags: secrets

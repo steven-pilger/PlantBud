@@ -7,6 +7,12 @@ case $1 in
             ansible-tasks/oracle-vm-extra.yml \
             --tags "restart"
         ;;
+    secrets)
+        ansible-playbook -i \
+            production \
+            ansible-tasks/oracle-vm-extra.yml \
+            --tags "secrets"
+        ;;
     setup)
         ansible-playbook -i \
             production \

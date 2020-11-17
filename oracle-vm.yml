@@ -13,6 +13,15 @@
       - docker-engine
       state: latest
 
+  - name: Enable firewall rules
+    shell: |
+      sudo firewall-cmd --permanent --zone=public --add-service=http
+      sudo firewall-cmd --permanent --zone=public --add-service=https
+      sudo firewall-cmd --reload
+      exit 0
+    args:
+      warn: no
+
   - name: Install docker-compose
     shell: |
       sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
