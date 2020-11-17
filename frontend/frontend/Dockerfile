@@ -1,10 +1,17 @@
-FROM node:lts-buster AS build
+FROM node:lts-buster AS base
 COPY package.json .
-COPY package-lock.json .
-RUN npm ci
+COPY yarn.lock .
+RUN ["yarn", "install", "--frozen-lockfile"]
 COPY . .
 
-# CMD ["yarn", "start"]
+FROM base as dev
+CMD ["yarn", "run", "dev"]
 
-RUN npm run build
-CMD ["npm", "run", "dev"]
+FROM dev as build
+RUN ["yarn", "run", "build"]
+
+FROM build as prod
+# RUNNING WITHOUT PM2:
+# https://stackoverflow.com/a/55245460
+EXPOSE 3000
+CMD ["yarn", "run", "start"]

@@ -17,7 +17,6 @@ services:
          - "--log.level=INFO"
          - "--api.insecure=true"
          - "--providers.docker=true"
-         # - "--providers.docker.network=routing"
          - "--providers.docker.exposedbydefault=false"
          - "--entrypoints.web.address=:${HTTP_PORT}"
          - "--entrypoints.websecure.address=:${SSL_PORT}"
@@ -25,8 +24,6 @@ services:
          - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
          - "--certificatesresolvers.myresolver.acme.email=stevenpilger@fastmail.com"
          - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      # networks:
-      #    - routing
       ports:
          - ${HTTP_PORT}:${HTTP_PORT}
          - ${SSL_PORT}:${SSL_PORT}
@@ -37,43 +34,38 @@ services:
          - /var/run/docker.sock:/var/run/docker.sock
 
    whoami:
-      image: stefanscherer/whoami
-      restart: unless-stopped
-      # networks:
-      #    - routing
-      labels:
-         - traefik.enable=true
-         # - traefik.docker.network=routing
-         - traefik.http.services.whoami.loadbalancer.server.port=8080
-         - traefik.http.routers.whoami.entrypoints=websecure
-         - traefik.http.routers.whoami.tls.certresolver=myresolver
-         - traefik.http.routers.whoami.rule=Host(`stevenpilger.com`) && PathPrefix(`/whoami`)
+     image: stefanscherer/whoami
+     restart: unless-stopped
+     labels:
+       - traefik.enable=true
+       - traefik.http.services.whoami.loadbalancer.server.port=8080
+       - traefik.http.routers.whoami.entrypoints=websecure
+       - traefik.http.routers.whoami.tls.certresolver=myresolver
+       - traefik.http.routers.whoami.rule=Host(`stevenpilger.com`) && PathPrefix(`/whoami`)
 
-         - traefik.http.routers.whoami.middlewares=redirect-prefix,strip-prefix
-         - traefik.http.middlewares.redirect-prefix.redirectregex.regex=^(https?://[^/]+/[a-z0-9_]+)$$
-         - traefik.http.middlewares.redirect-prefix.redirectregex.replacement=$${1}/
-         - traefik.http.middlewares.redirect-prefix.redirectregex.permanent=true
-         - traefik.http.middlewares.strip-prefix.stripprefixregex.regex=/[a-z0-9_]+
+       - traefik.http.routers.whoami.middlewares=redirect-prefix,strip-prefix
+       - traefik.http.middlewares.redirect-prefix.redirectregex.regex=^(https?://[^/]+/[a-z0-9_]+)$$
+       - traefik.http.middlewares.redirect-prefix.redirectregex.replacement=$${1}/
+       - traefik.http.middlewares.redirect-prefix.redirectregex.permanent=true
+       - traefik.http.middlewares.strip-prefix.stripprefixregex.regex=/[a-z0-9_]+
 
    frontend:
-      build:
-        context: ./frontend/frontend
-      restart: unless-stopped
-      # networks:
-      #    - routing
-      labels:
-         - traefik.enable=true
-         # - traefik.docker.network=routing
-         - traefik.http.services.frontend.loadbalancer.server.port=3000
-         - traefik.http.routers.frontend.entrypoints=websecure
-         - traefik.http.routers.frontend.tls.certresolver=myresolver
-         - traefik.http.routers.frontend.rule=Host(`stevenpilger.com`)
+     build:
+       context: ./frontend/frontend
+       target: prod
+     restart: unless-stopped
 
-         - traefik.http.routers.frontend.middlewares=redirect-prefix,strip-prefix
-         - traefik.http.middlewares.redirect-prefix.redirectregex.regex=^(https?://[^/]+/[a-z0-9_]+)$$
-         - traefik.http.middlewares.redirect-prefix.redirectregex.replacement=$${1}/
-         - traefik.http.middlewares.redirect-prefix.redirectregex.permanent=true
-         - traefik.http.middlewares.strip-prefix.stripprefixregex.regex=/[a-z0-9_]+
+   webserver:
+     build:
+       context: ./webserver
+     restart: unless-stopped
+     labels:
+       - traefik.enable=true
+       - traefik.http.services.frontend.loadbalancer.server.port=8042
+       - traefik.http.routers.frontend.entrypoints=websecure
+       - traefik.http.routers.frontend.tls.certresolver=myresolver
+       - traefik.http.routers.frontend.rule=Host(`stevenpilger.com`)
+
 # secrets:
 #   variables:
 #     file: ./environment.env
