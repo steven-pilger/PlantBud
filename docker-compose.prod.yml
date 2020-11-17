@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+  # openwhisk:
+  #   image: openwhisk/standalone:1.0.0
+  #   command: "--config-file custom.conf"
+  #   ports:
+  #       - 3232:3232
+  #       - 3233:3233
+  #   volumes:
+  #     - ./openwhisk/custom.conf:/custom.conf
+  #     - /var/run/docker.sock:/var/run/docker.sock
+
+   traefik:
+      image: traefik:v2.2
+      restart: unless-stopped
+      command:
+         - "--log.level=INFO"
+         - "--api.insecure=true"
+         - "--providers.docker=true"
+         - "--providers.docker.exposedbydefault=false"
+         - "--entrypoints.web.address=:${HTTP_PORT}"
+         - "--entrypoints.websecure.address=:${SSL_PORT}"
+         - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+         - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
+         - "--certificatesresolvers.myresolver.acme.email=stevenpilger@fastmail.com"
+         - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      ports:
+         - ${HTTP_PORT}:${HTTP_PORT}
+         - ${SSL_PORT}:${SSL_PORT}
+      env_file:
+         - ./frontend/traefik/traefik.env
+      volumes:
+         - ./frontend/letsencrypt:/letsencrypt
+         - /var/run/docker.sock:/var/run/docker.sock
+
+   # whoami:
+   #   image: stefanscherer/whoami
+   #   restart: unless-stopped
+   #   labels:
+   #     - traefik.enable=true
+   #     - traefik.http.services.whoami.loadbalancer.server.port=8080
+   #     - traefik.http.routers.whoami.entrypoints=websecure
+   #     - traefik.http.routers.whoami.tls.certresolver=myresolver
+   #     - traefik.http.routers.whoami.rule=Host(`stevenpilger.com`) && PathPrefix(`/whoami`)
+   # 
+   #     - traefik.http.routers.whoami.middlewares=redirect-prefix,strip-prefix
+   #     - traefik.http.middlewares.redirect-prefix.redirectregex.regex=^(https?://[^/]+/[a-z0-9_]+)$$
+   #     - traefik.http.middlewares.redirect-prefix.redirectregex.replacement=$${1}/
+   #     - traefik.http.middlewares.redirect-prefix.redirectregex.permanent=true
+   #     - traefik.http.middlewares.strip-prefix.stripprefixregex.regex=/[a-z0-9_]+
+
+   frontend:
+     build:
+       context: ./frontend/frontend
+       target: prod
+
+   webserver:
+     build:
+       context: ./webserver
+     restart: unless-stopped
+     labels:
+       - traefik.enable=true
+       - traefik.http.services.frontend.loadbalancer.server.port=8042
+       - traefik.http.routers.frontend.entrypoints=websecure
+       - traefik.http.routers.frontend.tls.certresolver=myresolver
+       - traefik.http.routers.frontend.rule=Host(`stevenpilger.com`)
+
+# secrets:
+#   variables:
+#     file: ./environment.env
+
+# networks:
+#    routing:
+#       external: true

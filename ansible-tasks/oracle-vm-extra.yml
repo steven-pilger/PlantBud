@@ -22,8 +22,14 @@
       mode: 0600
     tags: restart
 
+  - name: Build Project
+    command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+    args:
+      chdir: "{{dest_path}}"
+    tags: restart
+
   - name: Compose Up Project
-    command: docker-compose up -d
+    command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
     args:
       chdir: "{{dest_path}}"
     tags: restart

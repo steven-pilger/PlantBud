@@ -1,4 +1,5 @@
 FROM node:lts-buster AS base
+WORKDIR /frontend
 COPY package.json .
 COPY yarn.lock .
 RUN ["yarn", "install", "--frozen-lockfile"]

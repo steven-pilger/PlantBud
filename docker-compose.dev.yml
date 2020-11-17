@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+   frontend:
+     build:
+       target: dev
+     volumes:
+       - ./frontend/frontend:/frontend
+     ports:
+       - 3000:3000
+
