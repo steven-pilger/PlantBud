@@ -1,3 +1,4 @@
 - import_playbook: oracle-vm.yml
 - import_playbook: node-red-pi.yml
+- import_playbook: hassio-pi.yml
 

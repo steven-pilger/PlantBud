@@ -3,7 +3,7 @@
   gather_facts: no
   remote_user: steven
   vars_files:
-    - host_vars/node-red-pi.yml
+    - ../host_vars/node-red-pi.yml
 
   tasks:
   - name: Update git repo
