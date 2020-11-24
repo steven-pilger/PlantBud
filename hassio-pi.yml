@@ -17,9 +17,13 @@
       upgrade: dist
     become: yes
 
+  - name: Set timezone Europe/Copenhagen
+    command: timedatectl set-timezone Europe/Copenhagen
+    become: yes
+
   - name: Install required packages
     apt:
-      name: 
+      name:
       - git
       - build-essential
       - python3-distutils
@@ -114,6 +118,13 @@
       enabled: yes
       masked: no
     become: yes
-  
-  # - name: Enable and Restart HomeAssistant
-  #   command: sudo -u homeassistant -H -s /srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant
+
+  - name: Copy HomeAssistant configuration from repo to dir
+    copy:
+      src: "/home/steven/PlantBud/hassio-pi/{{item}}"
+      dest: "{{dest_path}}/{{item}}"
+      mode: preserve
+      remote_src: yes
+    with_items:
+      - "{{configuration_files}}"
+    become: yes

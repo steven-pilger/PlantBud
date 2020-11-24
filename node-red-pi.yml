@@ -17,9 +17,13 @@
       upgrade: dist
     become: yes
 
+  - name: Set timezone Europe/Copenhagen
+    command: timedatectl set-timezone Europe/Copenhagen
+    become: yes
+
   - name: Install required packages
     apt:
-      name: 
+      name:
       - git
       - build-essential
       - picocom
