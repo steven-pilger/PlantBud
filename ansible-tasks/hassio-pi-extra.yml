@@ -29,7 +29,7 @@
     tags: config_update
   
   - name: Check configuration
-    command: sudo -u homeassistant -H -s /srv/homeassistant/bin/hass --script check_config
+    command: sudo -u homeassistant -H -s /srv/homeassistant/bin/hass --script check_config --secrets
     tags: config_update
 
   - name: Enable and Restart HomeAssistant

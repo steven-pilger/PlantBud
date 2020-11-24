@@ -1,9 +1,33 @@
-
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
 recorder:
   commit_interval: 30
+
+
+influxdb:
+  api_version: 2
+  host: eu-central-1-1.aws.cloud2.influxdata.com
+  organization: !secret influxdb_organization_id
+  token: !secret influxdb_token
+  bucket: plantbud-iot
+  exclude:
+    entity_globs: "*"
+
+sensor:
+  - platform: influxdb
+    api_version: 2
+    host: eu-central-1-1.aws.cloud2.influxdata.com
+    organization: !secret influxdb_organization_id
+    token: !secret influxdb_token
+    bucket: plantbud-iot
+    queries_flux:
+      - group_function: last
+        name: "Test Query"
+        query: >
+          filter(fn: (r) => r["_measurement"] == "myMeasurement")
+          |> keep(columns: ["_value"]) 
+        range_start: "-1d"
 
 # Text to speech
 tts:
