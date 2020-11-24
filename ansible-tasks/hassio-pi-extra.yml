@@ -27,9 +27,11 @@
     with_items:
       - "{{configuration_files}}"
     tags: config_update
-  
+
   - name: Check configuration
     command: sudo -u homeassistant -H -s /srv/homeassistant/bin/hass --script check_config --secrets
+    args:
+      warn: no
     tags: config_update
 
   - name: Enable and Restart HomeAssistant

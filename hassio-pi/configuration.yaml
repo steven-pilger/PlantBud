@@ -22,12 +22,35 @@ sensor:
     token: !secret influxdb_token
     bucket: plantbud-iot
     queries_flux:
-      - group_function: last
-        name: "Test Query"
+      - name: "Dummy Alman Temperature over Past Hour"
+        range_start: "-1h"
+        group_function: mean
+        value_template: '{{ value | float | round(2) }}'
+        unit_of_measurement: '°C'
         query: >
-          filter(fn: (r) => r["_measurement"] == "myMeasurement")
-          |> keep(columns: ["_value"]) 
-        range_start: "-1d"
+          filter(fn: (r) => r["_measurement"] == "test")
+          |> filter(fn: (r) => r["_field"] == "temperature")
+          |> filter(fn: (r) => r["device"] == "device1")
+          |> keep(columns: ["_value"])
+      - name: "Dummy Alman Humidity over Past Hour"
+        range_start: "-1h"
+        group_function: mean
+        value_template: '{{ value | int }}'
+        unit_of_measurement: '%'
+        query: >
+          filter(fn: (r) => r["_measurement"] == "test")
+          |> filter(fn: (r) => r["_field"] == "humidity")
+          |> filter(fn: (r) => r["device"] == "device1")
+          |> keep(columns: ["_value"])
+
+plant:
+  alman:
+    sensors:
+      moisture: sensor.dummy_alman_humidity_over_past_hour
+      # battery: sensor.my_sensor_battery
+      temperature: sensor.dummy_alman_temperature_over_past_hour
+      # conductivity: sensor.my_sensor_conductivity
+      # brightness: sensor.my_sensor_brightness
 
 # Text to speech
 tts:
