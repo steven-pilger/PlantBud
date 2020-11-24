@@ -4,6 +4,19 @@ default_config:
 recorder:
   commit_interval: 30
 
+lovelace:
+  mode: storage
+  dashboards:
+      dash-home:
+        mode: yaml
+        title: Home
+        filename: dash-home.yaml
+        icon: mdi:home
+      dash-plants:
+        mode: yaml
+        title: Plants
+        filename: dash-plants.yaml
+        icon: mdi:sprout
 
 influxdb:
   api_version: 2

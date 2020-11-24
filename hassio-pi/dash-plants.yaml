@@ -1,0 +1,7 @@
+title: Plant Stats 🌱
+views:
+  - title: Overview
+    path: plants
+    cards:
+      - type: plant-status
+        entity: plant.alman

@@ -1,0 +1,9 @@
+title: Home 🏠
+views:
+  - title: Home
+    path: home
+    cards:
+      - type: markdown
+        title: Lovelace
+        content: >
+          Welcome to your **Lovelace UI**.

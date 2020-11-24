@@ -4,15 +4,6 @@
   remote_user: steven
   vars_files:
     - ../host_vars/hassio-pi.yml
-  vars:
-    dest_path: ../homeassistant/.homeassistant
-    configuration_files:
-      - automations.yaml
-      - configuration.yaml
-      - groups.yaml
-      - scenes.yaml
-      - scripts.yaml
-      - secrets.yaml
 
   tasks:
   - name: Update git repo
