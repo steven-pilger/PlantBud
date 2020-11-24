@@ -1,0 +1,1 @@
+[{"id":"PENIS","type":"tab","label":"Flow 1","disabled":false,"info":""},{"id":"59a27a1e.51d054","type":"inject","z":"b9e36cd3.c98508","name":"","props":[{"p":"payload"},{"p":"topic","vt":"str"}],"repeat":"","crontab":"","once":false,"onceDelay":0.1,"topic":"","payload":"","payloadType":"date","x":310,"y":80,"wires":[[]]}]

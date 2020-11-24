@@ -18,7 +18,7 @@
     become: yes
 
   - name: Install required packages
-    yum:
+    apt:
       name: 
       - git
       - build-essential
@@ -50,13 +50,36 @@
       executable: /bin/bash
     become: yes
 
+  - name: Add NodeRED user
+    user:
+      name: nodered
+      shell: /bin/bash
+      groups: dialout,gpio,i2c
+      system: yes
+      append: yes
+    become: yes
+
+  - name: Copy over systemd entry
+    copy:
+      src: "node-red-pi/node-red@nodered.service"
+      dest: "/etc/systemd/system/node-red@nodered.service"
+      mode: preserve
+    become: yes
+
   - name: Enable and Restart NodeRED
     service:
-      name: nodered.service
+      name: node-red@nodered.service
       state: restarted
       enabled: yes
       masked: no
     become: yes
 
   - name: Copy NodeRED configuration from repo to dir
-    command: echo 'not yet configured'
+    copy:
+      src: "/home/steven/PlantBud/node-red-pi/{{item}}"
+      dest: "{{dest_path}}/{{item}}"
+      mode: preserve
+      remote_src: yes
+    with_items:
+      - "{{configuration_files}}"
+    become: yes

@@ -16,4 +16,28 @@
       chdir: ~/PlantBud/iot-probes
     tags: flash
 
-
+  - name: Copy configuration files to remote
+    copy:
+      src: "{{inventory_dir}}/node-red-pi/{{item}}"
+      dest: "{{dest_path}}/{{item}}"
+      mode: preserve
+    with_items:
+      - "{{configuration_files}}"
+    tags: config_update
+  
+  - name: Enable and Restart NodeRED
+    service:
+      name: node-red@nodered.service
+      state: restarted
+      daemon_reload: yes
+    become: yes
+    tags: config_update
+  
+  - name: Pull configuration from remote to local
+    fetch:
+      src: "{{dest_path}}/{{item}}"
+      dest: "{{inventory_dir}}/node-red-pi/{{item}}"
+      flat: yes
+    with_items:
+      - "{{configuration_files}}"
+    tags: config_pull

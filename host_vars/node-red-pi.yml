@@ -1,2 +1,7 @@
 ansible_python_interpreter: /usr/bin/python3
 ansible_ssh_private_key_file: ./node-red-pi/ssh-key-node-red-pi-plantbud.key
+dest_path: ../nodered/.node-red
+configuration_files:
+  - settings.js
+  - flows_noderedpi.json
+  - flows_noderedpi_cred.json
