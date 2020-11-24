@@ -25,6 +25,13 @@ case $1 in
             ansible-tasks/node-red-pi-extra.yml \
             --tags "config_pull"
         ;;
+    install_node)
+        ansible-playbook -i \
+            production \
+            ansible-tasks/node-red-pi-extra.yml \
+            --tags "install_node" \
+            --extra-vars "npm_package=$2"
+        ;;
     setup)
         ansible-playbook -i \
             production \

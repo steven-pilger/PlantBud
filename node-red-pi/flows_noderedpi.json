@@ -1,1 +1,86 @@
-[{"id":"PENIS","type":"tab","label":"Flow 1","disabled":false,"info":""},{"id":"59a27a1e.51d054","type":"inject","z":"b9e36cd3.c98508","name":"","props":[{"p":"payload"},{"p":"topic","vt":"str"}],"repeat":"","crontab":"","once":false,"onceDelay":0.1,"topic":"","payload":"","payloadType":"date","x":310,"y":80,"wires":[[]]}]
+[
+    {
+        "disabled": false,
+        "id": "e6df3a0a.e20d08",
+        "info": "",
+        "label": "influx-test",
+        "type": "tab"
+    },
+    {
+        "database": "database",
+        "hostname": "127.0.0.1",
+        "id": "756806ee.7871e",
+        "influxdbVersion": "2.0",
+        "name": "",
+        "port": "8086",
+        "protocol": "http",
+        "rejectUnauthorized": true,
+        "tls": "",
+        "type": "influxdb",
+        "url": "https://eu-central-1-1.aws.cloud2.influxdata.com",
+        "usetls": false
+    },
+    {
+        "crontab": "",
+        "id": "c9c6f721.3e7ea8",
+        "name": "",
+        "once": false,
+        "onceDelay": "",
+        "payload": "",
+        "payloadType": "date",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "900",
+        "topic": "",
+        "type": "inject",
+        "wires": [
+            [
+                "a9a23702.01fea"
+            ]
+        ],
+        "x": 230,
+        "y": 220,
+        "z": "e6df3a0a.e20d08"
+    },
+    {
+        "func": "msg.payload = [{\n    numValue: 12,\n    randomValue: Math.random()*10,\n    strValue: \"message2\"\n},\n{\n    tag1:\"sensor1\",\n    tag2:\"device2\"\n}];\nreturn msg;",
+        "id": "a9a23702.01fea",
+        "name": "Fields and Tags",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+            [
+                "6232fb0.0b27a84"
+            ]
+        ],
+        "x": 420,
+        "y": 220,
+        "z": "e6df3a0a.e20d08"
+    },
+    {
+        "bucket": "plantbud-iot",
+        "database": "database",
+        "id": "6232fb0.0b27a84",
+        "influxdb": "756806ee.7871e",
+        "measurement": "test",
+        "name": "InfluxDB-Write",
+        "org": "1a92717a2152c109",
+        "precision": "",
+        "precisionV18FluxV20": "s",
+        "retentionPolicy": "",
+        "retentionPolicyV18Flux": "",
+        "type": "influxdb out",
+        "wires": [],
+        "x": 620,
+        "y": 220,
+        "z": "e6df3a0a.e20d08"
+    }
+]

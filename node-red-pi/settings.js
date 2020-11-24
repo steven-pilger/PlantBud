@@ -1,16 +1,3 @@
-/**
- * This is the default settings file provided by Node-RED.
- *
- * It can contain any valid JavaScript code that will get run when Node-RED
- * is started.
- *
- * Lines that start with // are commented out.
- * Each entry should be separated from the entries above and below by a comma ','
- *
- * For more information about individual settings, refer to the documentation:
- *    https://nodered.org/docs/user-guide/runtime/configuration
- **/
-
 module.exports = {
     // the tcp port that the Node-RED web server is listening on
     uiPort: process.env.PORT || 1880,

@@ -24,7 +24,7 @@
     with_items:
       - "{{configuration_files}}"
     tags: config_update
-  
+
   - name: Enable and Restart NodeRED
     service:
       name: node-red@nodered.service
@@ -32,7 +32,7 @@
       daemon_reload: yes
     become: yes
     tags: config_update
-  
+
   - name: Pull configuration from remote to local
     fetch:
       src: "{{dest_path}}/{{item}}"
@@ -41,3 +41,9 @@
     with_items:
       - "{{configuration_files}}"
     tags: config_pull
+
+  - name: Install a new node type
+    command: /usr/bin/env npm install {{npm_package}}
+    args:
+      chdir: /home/nodered/.node-red
+    tags: install_node
