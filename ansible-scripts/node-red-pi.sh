@@ -11,7 +11,16 @@ case $1 in
         ansible-playbook -i \
             production \
             ansible-tasks/node-red-pi-extra.yml \
-            --tags "flash"
+            --tags "flash" \
+            --extra-vars "device_name=$2"
+        ;;
+    restart)
+        ansible -i \
+            production \
+            noderedpi \
+            --private-key ./node-red-pi/ssh-key-node-red-pi-plantbud.key \
+            --become \
+            -a "/sbin/reboot"
         ;;
     config_update)
         ansible-playbook -i \

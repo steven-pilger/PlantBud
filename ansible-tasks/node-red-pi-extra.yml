@@ -1,5 +1,5 @@
 - hosts: noderedpi
-  become: yes
+  become: no
   gather_facts: no
   remote_user: steven
   vars_files:
@@ -8,9 +8,41 @@
   tasks:
   - name: Update git repo
     git: force=yes dest=~/PlantBud repo=https://github.com/steven-pilger/PlantBud
-    tags: update
+    tags: flash, update
 
-  - name: Flash Probe
+  - name: Unconditionally reboot the machine
+    reboot:
+    become: yes
+    tags: flash
+
+  - name: Create Device Config file
+    copy:
+      content: "NAME={{ device_name }}"
+      dest: ~/PlantBud/iot-probes/device.secret
+    tags: flash
+
+  - name: Copy secret files to remote
+    copy:
+      src: "{{ inventory_dir }}/iot-probes/{{ item }}"
+      dest: "~/PlantBud/iot-probes/{{ item }}"
+      mode: preserve
+    with_items:
+      - "{{ secret_files}}"
+    tags: flash
+
+  - name: Erase Memory on ESP32
+    command: esptool/esptool.py --port /dev/ttyUSB0 erase_flash
+    args:
+      chdir: ~/PlantBud/iot-probes
+    tags: flash
+
+  - name: Flash MicroPython to ESP32
+    command: esptool/esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 115200 write_flash -z 0x1000 micropython-esp32-idf4-20200902-v1.13.bin
+    args:
+      chdir: ~/PlantBud/iot-probes
+    tags: flash
+
+  - name: Put Code on ESP32
     command: make upload reset
     args:
       chdir: ~/PlantBud/iot-probes
@@ -23,6 +55,7 @@
       mode: preserve
     with_items:
       - "{{configuration_files}}"
+    become: yes
     tags: config_update
 
   - name: Enable and Restart NodeRED
@@ -46,4 +79,5 @@
     command: /usr/bin/env npm install {{npm_package}}
     args:
       chdir: /home/nodered/.node-red
+    become: yes
     tags: install_node

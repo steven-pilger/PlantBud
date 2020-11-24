@@ -5,3 +5,6 @@ configuration_files:
   - settings.js
   - flows_noderedpi.json
   - flows_noderedpi_cred.json
+secret_files:
+  - wifi.secret
+  - nodered-api.secret

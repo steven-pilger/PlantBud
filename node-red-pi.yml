@@ -54,6 +54,12 @@
       executable: /bin/bash
     become: yes
 
+  - name: Add steven user to dialout group
+    user:
+      name: steven
+      groups: dialout
+      append: yes
+
   - name: Add NodeRED user
     user:
       name: nodered
