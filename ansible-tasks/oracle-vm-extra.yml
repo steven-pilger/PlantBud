@@ -7,32 +7,33 @@
     dest_path: /home/opc/PlantBud
     secret_files:
       - .env
+      - frontend/frontend/.env.production
       - frontend/traefik/traefik.env
     acme_path: frontend/letsencrypt/acme.json
 
   tasks:
   - name: Update git repo
     git: force=yes dest="{{dest_path}}" repo=https://github.com/steven-pilger/PlantBud
-    tags: restart
+    tags: update
 
   - name: Prepare ACME cert
     file:
       path: "{{dest_path}}/{{acme_path}}"
       state: touch
       mode: 0600
-    tags: restart
+    tags: update
 
   - name: Build Project
     command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
     args:
       chdir: "{{dest_path}}"
-    tags: restart
+    tags: update
 
   - name: Compose Up Project
     command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
     args:
       chdir: "{{dest_path}}"
-    tags: restart
+    tags: update
 
   - name: Make sure secret destination dirs exist
     file:

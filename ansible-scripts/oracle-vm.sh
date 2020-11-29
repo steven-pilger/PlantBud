@@ -1,11 +1,11 @@
 #!/bin/bash
 
 case $1 in
-    restart)
+    update)
         ansible-playbook -i \
             production \
             ansible-tasks/oracle-vm-extra.yml \
-            --tags "restart"
+            --tags "update"
         ;;
     secrets)
         ansible-playbook -i \
