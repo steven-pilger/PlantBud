@@ -193,3 +193,5 @@ sketch
 **/*.env*
 frontend/letsencrypt/acme.json
 hassio-pi/secrets.yaml
+
+!frontend/frontend/lib
