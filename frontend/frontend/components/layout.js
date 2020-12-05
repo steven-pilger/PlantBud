@@ -1,6 +1,6 @@
-import Alert from '../components/alert'
-import Footer from '../components/footer'
-import Meta from '../components/meta'
+import Alert from './alert'
+import Footer from './footer'
+import Meta from './meta'
 
 export default function Layout({ preview, children }) {
   return (
@@ -8,8 +8,8 @@ export default function Layout({ preview, children }) {
       <Meta />
       <div className="flex flex-col min-h-screen">
         <Alert preview={preview} />
-        <main className='flex-grow'>{children}</main>
-      <Footer />
+        <main className="flex-grow">{children}</main>
+        <Footer />
       </div>
     </>
   )

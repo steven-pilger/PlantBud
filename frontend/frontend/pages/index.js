@@ -1,15 +1,18 @@
-import Intro from "../components/intro";
-import Layout from "../components/layout";
-import Hamburger from "../components/hamburger";
-import Container from "../components/container";
-import Highlight from "../components/highlight";
-import { getAllPostsForHome } from "../lib/api";
-import Head from "next/head";
+import { useState } from 'react'
+import Head from 'next/head'
+import Layout from '../components/layout'
+import Hamburger from '../components/hamburger'
+import Container from '../components/container'
+import Highlight from '../components/highlight'
+import { getAllPostsForHome } from '../lib/api'
 
-export default function Index({ preview, allPosts }) {
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const heroPost = allPosts[0];
-  const morePosts = allPosts.slice(1);
+export default function Index({
+  preview,
+  // allPosts
+}) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  // const heroPost = allPosts[0]
+  // const morePosts = allPosts.slice(1)
   return (
     <>
       <Layout preview={preview}>
@@ -43,12 +46,12 @@ export default function Index({ preview, allPosts }) {
         </Container>
       </Layout>
     </>
-  );
+  )
 }
 
 export async function getStaticProps({ preview = false }) {
-  const allPosts = (await getAllPostsForHome(preview)) ?? [];
+  const allPosts = (await getAllPostsForHome(preview)) ?? []
   return {
     props: { preview, allPosts },
-  };
+  }
 }

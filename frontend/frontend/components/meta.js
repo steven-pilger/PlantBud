@@ -34,7 +34,9 @@ export default function Meta() {
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       <meta
         name="description"
-            content={`Steven Pilger's personal web page, blog and projects, built with Next.js and maintained via Contentful CMS`}
+        content={
+          "Steven Pilger's personal web page, blog and projects, built with Next.js and maintained via Contentful CMS"
+        }
       />
       <meta property="og:image" content={HOME_OG_IMAGE_URL} />
     </Head>

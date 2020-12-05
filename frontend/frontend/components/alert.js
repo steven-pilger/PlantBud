@@ -1,6 +1,5 @@
-import Container from './container'
 import cn from 'classnames'
-import { EXAMPLE_PATH } from '../lib/constants'
+import Container from './container'
 
 export default function Alert({ preview }) {
   return (
@@ -11,8 +10,8 @@ export default function Alert({ preview }) {
       })}
     >
       <Container>
-          {preview ? (
-        <div className="py-2 text-center text-sm">
+        {preview ? (
+          <div className="py-2 text-center text-sm">
             <>
               This is page is a preview.{' '}
               <a
@@ -23,8 +22,8 @@ export default function Alert({ preview }) {
               </a>{' '}
               to exit preview mode.
             </>
-        </div>
-          ): null}
+          </div>
+        ) : null}
       </Container>
     </div>
   )
