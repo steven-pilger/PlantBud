@@ -1,5 +1,6 @@
 module.exports = {
   purge: ['./components/**/*.js', './components/**/*.css'],
+  darkMode: false,
   theme: {
     extend: {
       colors: {
@@ -30,4 +31,8 @@ module.exports = {
       },
     },
   },
+  variants: {
+    extend: {},
+  },
+  plugins: []
 }

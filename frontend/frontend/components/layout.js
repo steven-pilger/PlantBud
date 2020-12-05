@@ -6,11 +6,11 @@ export default function Layout({ preview, children }) {
   return (
     <>
       <Meta />
-      <div className="min-h-screen">
+      <div className="flex flex-col min-h-screen">
         <Alert preview={preview} />
-        <main>{children}</main>
-      </div>
+        <main className='flex-grow'>{children}</main>
       <Footer />
+      </div>
     </>
   )
 }
