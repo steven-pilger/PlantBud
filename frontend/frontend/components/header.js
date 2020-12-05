@@ -1,12 +1,14 @@
-import Link from 'next/link'
+import Container from './container'
+import Hamburger from './hamburger'
 
-export default function Header() {
+export default function Header({ open, setOpen }) {
   return (
-    <h2 className="text-2xl md:text-4xl font-bold tracking-tight md:tracking-tighter leading-tight mb-20 mt-8">
-      <Link href="/">
-        <a className="hover:underline">Blog</a>
-      </Link>
-      .
-    </h2>
+    <Container>
+      <header className="pt-5">
+        <section id="hamburger">
+          <Hamburger open={open} setOpen={setOpen} />
+        </section>
+      </header>
+    </Container>
   )
 }
