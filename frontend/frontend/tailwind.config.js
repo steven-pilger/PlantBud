@@ -19,6 +19,11 @@ module.exports = {
       lineHeight: {
         tight: 1.2,
       },
+      fontFamily: {
+        sans: ['Lato', 'sans-serif'],
+        serif: ['Castoro', 'serif'],
+        monospace: ['JetBrains Mono', 'monospace'],
+      },
       fontSize: {
         '5xl': '2.5rem',
         '6xl': '2.75rem',

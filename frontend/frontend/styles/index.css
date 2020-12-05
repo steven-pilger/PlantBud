@@ -1,5 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;1,300&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,100;1,300;1,400&display=swap');
 /* purgecss start ignore */
 @tailwind base;
 @tailwind components;
 /* purgecss end ignore */
 @tailwind utilities;
+
+.readable-text {
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga' 1, 'zero' 1, 'kern' 1, 'onum' 1;
+  max-width: 60ch;
+}
