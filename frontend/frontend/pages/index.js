@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import Head from 'next/head'
 import Layout from '../components/layout'
-import Hamburger from '../components/hamburger'
 import Container from '../components/container'
 import Highlight from '../components/highlight'
+import Hamburger from '../components/hamburger'
+import Menu from '../components/menu'
 import { getAllPostsForHome } from '../lib/api'
 
 export default function Index({
@@ -21,7 +22,7 @@ export default function Index({
         </Head>
 
         <Container>
-          <header>
+          <header className="pt-5">
             <section id="hamburger">
               <Hamburger open={menuOpen} setOpen={setMenuOpen} />
             </section>
@@ -44,6 +45,8 @@ export default function Index({
             </section>
           </main>
         </Container>
+
+        <Menu open={menuOpen} />
       </Layout>
     </>
   )

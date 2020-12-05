@@ -5,7 +5,7 @@ import Twitter from './twitter'
 
 export default function Footer() {
   return (
-    <footer className="bg-accent-1 border-t border-accent-2">
+    <footer id="footer" className="bg-accent-1 border-t border-accent-2">
       <Container>
         <div className="flex flex-col lg:flex-row items-center mb-2 lg:justify-between">
           <div className="flex flex-col lg:flex-row lg:justify-start items-center">
