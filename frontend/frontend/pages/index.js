@@ -3,16 +3,15 @@ import Highlight from '../components/highlight'
 export default function Index() {
   // const heroPost = allPosts[0]
   // const morePosts = allPosts.slice(1)
-  // const [open, toggleOpen] = useContext(MenuContext)
   return (
     <main className="mt-10">
-      <section id="greeting-1" className="font-sans text-6xl font-extrabold">
-        Hi!
+      <section id="greeting-1" className="text-6xl">
+        <span className="font-sans font-extrabold">Hi!</span>
       </section>
-      <section id="greeting-2" className="font-sans text-3xl font-medium">
-        I'm Steven 👋
+      <section id="greeting-2" className="text-3xl">
+        <span className="font-sans font-medium">I'm Steven 👋</span>
       </section>
-      <section id="highlights" className="py-10">
+      <section id="highlights">
         <Highlight />
       </section>
     </main>
