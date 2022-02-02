@@ -1,11 +1,12 @@
 import usocket as socket
 import machine
-from machine import Pin
+from machine import Pin, ADC
 import dht
 import network
 from time import sleep
 import urequests as requests
 from random import randrange
+from math import sqrt
 
 def read_secrets(credential_path):
     credentials = {}
@@ -16,11 +17,12 @@ def read_secrets(credential_path):
                 credentials[entry[0]] = entry[1]
     return credentials
 
-def connect_wlan(SSID, PW):
+def connect_wlan(SSID, PW, NAME):
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     if not wlan.isconnected():
         print('connecting to network...')
+        wlan.config(dhcp_hostname=NAME)
         wlan.connect(SSID, PW)
         while not wlan.isconnected():
             pass
@@ -68,27 +70,66 @@ sleep(2)
 
 #Connect to WLAN
 credentials = read_secrets('./wifi.secret')
-connect_wlan(credentials['SSID'], credentials['PASSWORD'])
-
-# Take DHT ambient measurement
-# d = dht.DHT11(Pin(4))
-# d.measure()
-# d.temperature() # eg. 23 (°C)
-# d.humidity()    # eg. 41 (% RH)
+connect_wlan(credentials['SSID'], credentials['PASSWORD'], device_config['NAME'])
 
 # Take analog soil moisture measurement
-# add code here
+adc = ADC(Pin(34))
+sleep(1)
+attempt = 0
+acclimated = False
+while True:
+    buf = []
+    if acclimated:
+        print('Measuring!')
+        for i in range(10):
+            value = adc.read_u16()
+            buf.append(value)
+            sleep(0.3)
+        moisture = sum(buf) / len(buf)
+        moisture = round((1 - (moisture / 24000)) * 100)
+        break
+    elif not acclimated and attempt >= 15:
+        print('Could not acclimate. Measurement skipped.')
+        moisture = 999
+        break
+    else:
+        attempt += 1
+        print('Acclimating: ', attempt)
+        for i in range(25):
+            value = adc.read_u16()
+            buf.append(value)
+            sleep(0.2)
+        # calculate mean
+        m = sum(buf) / len(buf)
+        # calculate variance using a list comprehension
+        var_res = sum([(xi - m) ** 2 for xi in buf]) / (len(buf) -1)
+        stdv = sqrt(var_res)
+        print(buf)
+        print(m)
+        print('Variance: ', var_res)
+        print('Std.dev.: ', stdv)
 
-# build data object for post request
-temp = randrange(18,35)
-humid = randrange(1,100)
+        if stdv <= 400 and attempt >= 3 and stdv != 0.0:
+            acclimated = True
+
+
+
+# Take DHT ambient measurement
+d = dht.DHT11(Pin(32, Pin.IN, Pin.PULL_UP))
+d.measure()
+temp = d.temperature() # eg. 23 (°C)
+humid = d.humidity()    # eg. 41 (% RH)
+
 data = {
     'temperature': temp,
     'humidity': humid,
+    'moisture': moisture,
     'device': device_config['NAME']
 }
-p = Pin(23, Pin.OUT)
-p.on()
+
+print(data)
+# p = Pin(23, Pin.OUT)
+# p.on()
 
 api_config = read_secrets('./nodered-api.secret')
 request(
@@ -99,7 +140,7 @@ request(
     data = data
 )
 
-p.off()
+# p.off()
 sleep(1)
 
 # Go to deepsleep
