@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.1.0
     hooks:
       - id: check-yaml
       - id: check-json
@@ -8,12 +8,12 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: master
+    rev: v2.5.1
     hooks:
       - id: prettier
 
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: master
+    rev: v8.8.0
     hooks:
       - id: eslint
         files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
